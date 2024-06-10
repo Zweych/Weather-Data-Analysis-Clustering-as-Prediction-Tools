@@ -36,8 +36,8 @@ def handle_outliers(data):
 def reduce_dimension(X, method, n_components=3):
     if method == 'PCA':
         reducer = PCA(n_components=n_components)
-    elif method == 'LDA':
-        reducer = LDA(n_components=n_components)
+    # elif method == 'LDA':
+    #     reducer = LDA(n_components=n_components)
     elif method == 't-SNE':
         reducer = TSNE(n_components=n_components, random_state=42)
     else:
@@ -46,15 +46,15 @@ def reduce_dimension(X, method, n_components=3):
     return reducer.fit_transform(X)
 
 # Fungsi untuk clustering
-def cluster_data(X, method):
+def cluster_data(X, method, n_cluster):
     if method == 'KMeans':
-        clusterer = KMeans(n_clusters=4, random_state=42)
+        clusterer = KMeans(n_clusters=n_cluster, random_state=42)
     elif method == 'DBSCAN':
         clusterer = DBSCAN(eps=0.5, min_samples=2)
     elif method == 'Spectral Clustering':
-        clusterer = SpectralClustering(n_clusters=4, affinity='nearest_neighbors', random_state=42)
+        clusterer = SpectralClustering(n_clusters=n_cluster, affinity='nearest_neighbors', random_state=42)
     elif method == 'Gaussian Mixture Model':
-        clusterer = GaussianMixture(n_components=4, random_state=42)
+        clusterer = GaussianMixture(n_components=n_cluster, random_state=42)
     else:
         raise ValueError("Metode clustering tidak dikenal")
     
@@ -73,6 +73,26 @@ def plot_3d(X, labels, title):
     ax.set_ylabel('Component 2')
     ax.set_zlabel('Component 3')
     plt.show()
+    
+# Function to assign descriptive labels to clusters
+def assign_descriptive_labels(data, labels):
+    unique_labels = set(labels)
+    descriptive_labels = {}
+    for label in unique_labels:
+        cluster_data = data[labels == label]
+        avg_RR = cluster_data['RR'].mean()
+        avg_ss = cluster_data['ss'].mean()
+        avg_temperature = cluster_data['Tavg'].mean()
+        
+        if avg_RR > 10 and avg_ss < 5 and avg_temperature < 20:
+            descriptive_labels[label] = 'Hujan'  # Rain
+        elif 5 <= avg_RR <= 10 and avg_ss < 5 and 20 <= avg_temperature < 25:
+            descriptive_labels[label] = 'Gerimis'  # Drizzle
+        elif avg_RR < 5 and avg_ss > 5 and avg_temperature >= 25:
+            descriptive_labels[label] = 'Cerah'  # Sunny
+        else:
+            descriptive_labels[label] = 'Berawan'  # Cloudy
+    return descriptive_labels
 
 # Fungsi untuk menyimpan model
 # def save_model(model, filename):

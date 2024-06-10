@@ -26,9 +26,10 @@ data['ddd_car']= label_encoder.fit_transform(data['ddd_car'])
 # UI Streamlit
 st.title("Weather Data Clustering")
 station_id = st.selectbox("Pilih Station ID", data['station_id'].unique())
-reduction_method = st.selectbox("Pilih Metode Reduksi Dimensi", ['PCA', 'LDA', 't-SNE'])
-plotting_method = st.selectbox("Pilih Jenis Plotting", ['KMeans', 'DBSCAN', 'Spectral Clustering', 'Gaussian Mixture Model'])
 outlier_handling = st.selectbox("Handle Outliers", ['No', 'Yes'])
+reduction_method = st.selectbox("Pilih Metode Reduksi Dimensi", ['PCA', 'LDA', 't-SNE'])
+n_cluster = st.slider("Pilih Jumlah Cluster", min_value=2, max_value=10, value=4)
+plotting_method = st.selectbox("Pilih Jenis Plotting", ['KMeans', 'DBSCAN', 'Spectral Clustering', 'Gaussian Mixture Model'])
 # save_model_option = st.checkbox("Simpan model ke file")
 
 # Handle Outliers
@@ -47,7 +48,7 @@ X_scaled = scaler.fit_transform(X)
 X_reduced = reduce_dimension(X_scaled, reduction_method)
 
 # Clustering
-model, labels = cluster_data(X_reduced, plotting_method)
+model, labels = cluster_data(X_reduced, plotting_method, n_cluster)
 
 # Compute silhouette score
 silhouette_avg = silhouette_score(X_reduced, labels)
