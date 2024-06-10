@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.metrics import silhouette_score
-from weather_clustering_app import handle_outliers, reduce_dimension, cluster_data, fillna_groupby_mean, fillna_groupby_mode
+from weather_clustering_app import handle_outliers, reduce_dimension, cluster_data, fillna_groupby_mean, fillna_groupby_mode, assign_descriptive_labels
 
 # Fungsi untuk memuat data
 def load_data(file_path):
@@ -54,16 +54,36 @@ model, labels = cluster_data(X_reduced, plotting_method, n_cluster)
 silhouette_avg = silhouette_score(X_reduced, labels)
 st.write(f'Silhouette Score: {silhouette_avg}')
 
+# Assign descriptive labels
+descriptive_labels = assign_descriptive_labels(data_filtered, labels)
+labeled_clusters = [descriptive_labels[label] for label in labels]
+
+# Calculate centroids for annotation
+def calculate_centroids(X, labels):
+    centroids = []
+    for label in set(labels):
+        centroids.append(X[labels == label].mean(axis=0))
+    return centroids
+
 # Plotting hasil clustering
 fig = plt.figure(figsize=(10, 8))
 ax = fig.add_subplot(111, projection='3d')
-scatter = ax.scatter(X_reduced[:, 0], X_reduced[:, 1], X_reduced[:, 2], c=labels, cmap='viridis', s=50)
-legend1 = ax.legend(*scatter.legend_elements(), title="Cluster")
-ax.add_artist(legend1)
+unique_labels = list(set(labels))
+label_color_map = {
+    'Hujan': 'r',  # Rain
+    'Gerimis': 'g',  # Drizzle
+    'Cerah': 'b',  # Sunny
+    'Berawan': 'y',  # Cloudy
+    'Undefined': 'black'  # Undefined
+}
+for label in unique_labels:
+    cluster_data = X_reduced[labels == label]
+    ax.scatter(cluster_data[:, 0], cluster_data[:, 1], cluster_data[:, 2], c=label_color_map[descriptive_labels[label]], label=descriptive_labels[label], s=50)
 ax.set_title(f'{plotting_method} Clustering with {reduction_method}')
 ax.set_xlabel('Component 1')
 ax.set_ylabel('Component 2')
 ax.set_zlabel('Component 3')
+ax.legend()
 st.pyplot(fig)
 
 # Menyimpan model jika opsi dipilih

@@ -1,8 +1,5 @@
-import pandas as pd
 import numpy as np
-from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
-from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
 from sklearn.manifold import TSNE
 from sklearn.cluster import KMeans, DBSCAN, SpectralClustering
 from sklearn.mixture import GaussianMixture
@@ -82,16 +79,17 @@ def assign_descriptive_labels(data, labels):
         cluster_data = data[labels == label]
         avg_RR = cluster_data['RR'].mean()
         avg_ss = cluster_data['ss'].mean()
-        avg_temperature = cluster_data['Tavg'].mean()
         
-        if avg_RR > 10 and avg_ss < 5 and avg_temperature < 20:
+        if avg_RR > 10 and avg_ss < 5:  # High rainfall, low sunshine
             descriptive_labels[label] = 'Hujan'  # Rain
-        elif 5 <= avg_RR <= 10 and avg_ss < 5 and 20 <= avg_temperature < 25:
-            descriptive_labels[label] = 'Gerimis'  # Drizzle
-        elif avg_RR < 5 and avg_ss > 5 and avg_temperature >= 25:
+        elif avg_RR < 5 and avg_ss > 5:  # Low rainfall, high sunshine
             descriptive_labels[label] = 'Cerah'  # Sunny
-        else:
+        elif 5 <= avg_RR <= 10 and avg_ss < 5:  # Medium rainfall, low to medium sunshine
+            descriptive_labels[label] = 'Gerimis'  # Drizzle
+        elif avg_RR < 10 and 5 <= avg_ss <= 10:  # Low to medium rainfall, medium sunshine
             descriptive_labels[label] = 'Berawan'  # Cloudy
+        else:
+            descriptive_labels[label] = 'Undefined'  # If none of the conditions match
     return descriptive_labels
 
 # Fungsi untuk menyimpan model
