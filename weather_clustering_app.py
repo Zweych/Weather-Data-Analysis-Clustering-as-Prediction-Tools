@@ -18,6 +18,19 @@ def fillna_groupby_mean(data, columns):
 def fillna_groupby_mode(data, columns):
     for column in columns:
         data[column] = data.groupby('station_id')[column].transform(lambda x: x.fillna(x.mode()))
+        
+# Fungsi untuk handle outliers
+def handle_outliers(data):
+    for i in data.columns:
+        if i not in ['station_id', 'date']:
+            Q1 = data[i].quantile(0.25)
+            Q3 = data[i].quantile(0.75)
+            IQR = Q3 - Q1
+            lower_bound = Q1 - 1.5 * IQR
+            upper_bound = Q3 + 1.5 * IQR
+            data[i] = np.where(data[i] < lower_bound, lower_bound, data[i])
+            data[i] = np.where(data[i] > upper_bound, upper_bound, data[i])
+    return data
 
 # Fungsi untuk mereduksi dimensi
 def reduce_dimension(X, method, n_components=3):

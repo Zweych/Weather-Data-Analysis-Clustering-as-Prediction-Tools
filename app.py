@@ -2,7 +2,8 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import LabelEncoder, StandardScaler
-from weather_clustering_app import reduce_dimension, cluster_data, fillna_groupby_mean, fillna_groupby_mode
+from sklearn.metrics import silhouette_score
+from weather_clustering_app import handle_outliers, reduce_dimension, cluster_data, fillna_groupby_mean, fillna_groupby_mode
 
 # Fungsi untuk memuat data
 def load_data(file_path):
@@ -17,7 +18,7 @@ fillna_groupby_mode(data, ['ddd_car'])
     
 # Drop missing values
 data.dropna(inplace=True)
-    
+
 # Encode categorical data
 label_encoder = LabelEncoder()
 data['ddd_car']= label_encoder.fit_transform(data['ddd_car'])
@@ -27,7 +28,12 @@ st.title("Weather Data Clustering")
 station_id = st.selectbox("Pilih Station ID", data['station_id'].unique())
 reduction_method = st.selectbox("Pilih Metode Reduksi Dimensi", ['PCA', 'LDA', 't-SNE'])
 plotting_method = st.selectbox("Pilih Jenis Plotting", ['KMeans', 'DBSCAN', 'Spectral Clustering', 'Gaussian Mixture Model'])
+outlier_handling = st.selectbox("Handle Outliers", ['No', 'Yes'])
 # save_model_option = st.checkbox("Simpan model ke file")
+
+# Handle Outliers
+if outlier_handling == 'Yes':
+    data = handle_outliers(data)
 
 # Filter data berdasarkan station_id
 data_filtered = data[data['station_id'] == station_id]
@@ -42,6 +48,10 @@ X_reduced = reduce_dimension(X_scaled, reduction_method)
 
 # Clustering
 model, labels = cluster_data(X_reduced, plotting_method)
+
+# Compute silhouette score
+silhouette_avg = silhouette_score(X_reduced, labels)
+st.write(f'Silhouette Score: {silhouette_avg}')
 
 # Plotting hasil clustering
 fig = plt.figure(figsize=(10, 8))
