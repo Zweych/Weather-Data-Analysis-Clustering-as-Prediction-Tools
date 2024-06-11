@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import LabelEncoder, StandardScaler
-from sklearn.metrics import silhouette_score
+from sklearn.metrics import silhouette_score, davies_bouldin_score, calinski_harabasz_score
 from weather_clustering_app import handle_outliers, reduce_dimension, cluster_data, fillna_groupby_mean, fillna_groupby_mode
 
 # Fungsi untuk memuat data
@@ -50,9 +50,13 @@ X_reduced = reduce_dimension(X_scaled, reduction_method)
 # Clustering
 model, labels = cluster_data(X_reduced, plotting_method, n_cluster)
 
-# Compute silhouette score
+# Compute evaluation score
 silhouette_avg = silhouette_score(X_reduced, labels)
+davies_bouldin_avg = davies_bouldin_score(X_reduced, labels)
+calinski_harabasz_avg = calinski_harabasz_score(X_reduced, labels)
 st.write(f'Silhouette Score: {silhouette_avg}')
+print(f'Davies-Bouldin Index: {davies_bouldin_avg}')
+print(f'Calinski-Harabasz Index: {calinski_harabasz_avg}')
 
 # Plotting hasil clustering
 fig = plt.figure(figsize=(10, 8))
