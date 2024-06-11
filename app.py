@@ -55,8 +55,8 @@ silhouette_avg = silhouette_score(X_reduced, labels)
 davies_bouldin_avg = davies_bouldin_score(X_reduced, labels)
 calinski_harabasz_avg = calinski_harabasz_score(X_reduced, labels)
 st.write(f'Silhouette Score: {silhouette_avg}')
-print(f'Davies-Bouldin Index: {davies_bouldin_avg}')
-print(f'Calinski-Harabasz Index: {calinski_harabasz_avg}')
+st.write(f'Davies-Bouldin Index: {davies_bouldin_avg}')
+st.write(f'Calinski-Harabasz Index: {calinski_harabasz_avg}')
 
 # Plotting hasil clustering
 fig = plt.figure(figsize=(10, 8))
