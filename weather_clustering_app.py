@@ -70,27 +70,6 @@ def plot_3d(X, labels, title):
     ax.set_ylabel('Component 2')
     ax.set_zlabel('Component 3')
     plt.show()
-    
-# Function to assign descriptive labels to clusters
-def assign_descriptive_labels(data, labels):
-    unique_labels = set(labels)
-    descriptive_labels = {}
-    for label in unique_labels:
-        cluster_data = data[labels == label]
-        avg_RR = cluster_data['RR'].mean()
-        avg_ss = cluster_data['ss'].mean()
-        
-        if avg_RR > 10 and avg_ss < 5:  # High rainfall, low sunshine
-            descriptive_labels[label] = 'Hujan'  # Rain
-        elif avg_RR < 5 and avg_ss > 5:  # Low rainfall, high sunshine
-            descriptive_labels[label] = 'Cerah'  # Sunny
-        elif 5 <= avg_RR <= 10 and avg_ss < 5:  # Medium rainfall, low to medium sunshine
-            descriptive_labels[label] = 'Gerimis'  # Drizzle
-        elif avg_RR < 10 and 5 <= avg_ss <= 10:  # Low to medium rainfall, medium sunshine
-            descriptive_labels[label] = 'Berawan'  # Cloudy
-        else:
-            descriptive_labels[label] = 'Undefined'  # If none of the conditions match
-    return descriptive_labels
 
 # Fungsi untuk menyimpan model
 # def save_model(model, filename):
