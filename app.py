@@ -25,11 +25,11 @@ data['ddd_car']= label_encoder.fit_transform(data['ddd_car'])
 
 # UI Streamlit
 st.title("Weather Data Clustering")
-station_id = st.selectbox("Pilih Station ID", data['station_id'].unique())
-outlier_handling = st.selectbox("Handle Outliers", ['No', 'Yes'])
-reduction_method = st.selectbox("Pilih Metode Reduksi Dimensi", ['PCA', 't-SNE'])
-n_components = st.slider("Pilih Jumlah Cluster", min_value=2, max_value=3)
-plotting_method = st.selectbox("Pilih Metode Plotting", ['KMeans', 'DBSCAN', 'Spectral Clustering', 'Gaussian Mixture Model'])
+station_id = st.selectbox("Choose Station ID", data['station_id'].unique())
+outlier_handling = st.selectbox("Do you want to Handle Outliers?", ['No', 'Yes'])
+reduction_method = st.selectbox("Choose Dimension Reduction Method", ['PCA', 't-SNE'])
+n_components = st.selectbox("Choose Number of Dimension", [2, 3])
+plotting_method = st.selectbox("Choose Plotting Method", ['KMeans', 'DBSCAN', 'Spectral Clustering', 'Gaussian Mixture Model'])
 # save_model_option = st.checkbox("Simpan model ke file")
 
 # Handle Outliers
