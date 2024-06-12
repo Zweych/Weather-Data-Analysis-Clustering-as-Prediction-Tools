@@ -30,11 +30,9 @@ def handle_outliers(data):
     return data
 
 # Fungsi untuk mereduksi dimensi
-def reduce_dimension(X, method, n_components=3):
+def reduce_dimension(X, method, n_components):
     if method == 'PCA':
         reducer = PCA(n_components=n_components)
-    # elif method == 'LDA':
-    #     reducer = LDA(n_components=n_components)
     elif method == 't-SNE':
         reducer = TSNE(n_components=n_components, random_state=42)
     else:
@@ -43,15 +41,15 @@ def reduce_dimension(X, method, n_components=3):
     return reducer.fit_transform(X)
 
 # Fungsi untuk clustering
-def cluster_data(X, method, n_cluster):
+def cluster_data(X, method):
     if method == 'KMeans':
-        clusterer = KMeans(n_clusters=n_cluster, random_state=42)
+        clusterer = KMeans(n_clusters=4, random_state=42)
     elif method == 'DBSCAN':
         clusterer = DBSCAN(eps=0.5, min_samples=2)
     elif method == 'Spectral Clustering':
-        clusterer = SpectralClustering(n_clusters=n_cluster, affinity='nearest_neighbors', random_state=42)
+        clusterer = SpectralClustering(n_clusters=4, affinity='nearest_neighbors', random_state=42)
     elif method == 'Gaussian Mixture Model':
-        clusterer = GaussianMixture(n_components=n_cluster, random_state=42)
+        clusterer = GaussianMixture(n_components=4, random_state=42)
     else:
         raise ValueError("Metode clustering tidak dikenal")
     
