@@ -29,7 +29,7 @@ station_id = st.selectbox("Choose Station ID", data['station_id'].unique())
 outlier_handling = st.selectbox("Do you want to Handle Outliers?", ['No', 'Yes'])
 reduction_method = st.selectbox("Choose Dimension Reduction Method", ['PCA', 't-SNE'])
 n_components = st.selectbox("Choose Number of Dimension", [2, 3])
-plotting_method = st.selectbox("Choose Plotting Method", ['KMeans', 'DBSCAN', 'Spectral Clustering', 'Gaussian Mixture Model'])
+plotting_method = st.selectbox("Choose Clustering Method", ['KMeans', 'DBSCAN', 'Spectral Clustering', 'Gaussian Mixture Model'])
 # save_model_option = st.checkbox("Simpan model ke file")
 
 # Handle Outliers
